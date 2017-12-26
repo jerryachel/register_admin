@@ -3,15 +3,17 @@ import Vuex from 'vuex'
 import Cookies from 'js-cookie'
 // 引入 axios
 import axios from '../service/axios.js'
-
+console.log(Cookies.get('user_info'))
 Vue.use(Vuex)
 const store = new Vuex.Store({
 	state: {
-		user_info:''
+		user_info:Cookies.get('user_info') ? JSON.parse(Cookies.get('user_info')) : '',
 	},
 	mutations:{
 		SAVE_INFO:(state,obj)=> {
-			if (obj.info == state.user_info) {
+			state.user_info = obj
+			Cookies.set('user_info',state.user_info)
+			/*if (obj.info == state.user_info) {
 				return
 			}else{
 				state.user_info = obj.info
@@ -21,7 +23,7 @@ const store = new Vuex.Store({
 				}else{
 					Cookies.set('user_info',state.user_info)
 				}
-			}
+			}*/
 		},
 		//保存站点列表信息
 		SAVE_SITES:(state,obj)=>{
@@ -35,18 +37,11 @@ const store = new Vuex.Store({
 	},
 	actions: {
 		login:({ commit },obj) => {
-			axios.post('account/login.do',{
-				userName:obj.userName,
-				password:obj.password
-			}).then(({data})=>{
-				console.log(data)
-				//commit('SAVE_INFO',obj)
-			})
-			
-	    },
-		useInfo:({ commit },obj) => {
 			commit('SAVE_INFO',obj)
 	    },
+		// useInfo:({ commit },obj) => {
+		// 	commit('SAVE_INFO',obj)
+	 //    },
 	    sites:({ commit },obj)=>{
 	    	commit('SAVE_SITES',obj)
 	    }

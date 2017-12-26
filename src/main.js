@@ -23,12 +23,21 @@ import store from './store/store'
 import './assets/css/public.css'
 Vue.config.productionTip = false
 /* eslint-disable no-new */
-console.log(store)
+router.beforeEach((to, from, next) => {
+    if (to.path == '/login') {
+      next()
+    }else{
+      if (!store.state.user_info) {
+          next({path:'/login'})
+      }else{
+          next()
+      }
+    }
+})
 new Vue({
-  store,
   el: '#app',
   router,
-  
+  store,
   template: '<App/>',
   components: { App }
 })

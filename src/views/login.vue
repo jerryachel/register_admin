@@ -16,7 +16,7 @@
 </template>
 <script>
 import {Input,Button} from 'element-ui'
-import axios from 'axios'
+import axios from '../service/axios.js'
 export default {
 	components: {
 		elInput:Input,
@@ -30,11 +30,11 @@ export default {
 	},
 	methods:{
 		login(){
-			this.$store.dispatch('login',{
+			axios.post('account/login.do',{
 				userName:this.name,
 				password:this.password
-			}).then((res)=>{
-				console.log(res)
+			}).then(({data})=>{
+				this.$store.dispatch('login',{name:'陈医生'})
 			})
 		}
 	}
