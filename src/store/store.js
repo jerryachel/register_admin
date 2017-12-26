@@ -40,9 +40,9 @@ const store = new Vuex.Store({
 				password:obj.password
 			}).then(({data})=>{
 				console.log(data)
-
+				//commit('SAVE_INFO',obj)
 			})
-			commit('SAVE_INFO',obj)
+			
 	    },
 		useInfo:({ commit },obj) => {
 			commit('SAVE_INFO',obj)

@@ -33,6 +33,8 @@ export default {
 			this.$store.dispatch('login',{
 				userName:this.name,
 				password:this.password
+			}).then((res)=>{
+				console.log(res)
 			})
 		}
 	}
