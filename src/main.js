@@ -19,15 +19,16 @@ Date.prototype.Format = function (fmt) { //author:
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import store from './store/store.js'
+import store from './store/store'
 import './assets/css/public.css'
 Vue.config.productionTip = false
-
 /* eslint-disable no-new */
+console.log(store)
 new Vue({
-  el: '#app',
   store,
+  el: '#app',
   router,
+  
   template: '<App/>',
   components: { App }
 })

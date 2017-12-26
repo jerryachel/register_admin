@@ -10,12 +10,13 @@
 				密码
 				<el-input v-model="password" placeholder="请输入密码"></el-input>
 			</div>
-			<el-button @click="login" class="login_btn" type="primary">登录</el-button>
+			<el-button @click.native="login" class="login_btn" type="primary">登录</el-button>
 		</div>
 	</div>
 </template>
 <script>
 import {Input,Button} from 'element-ui'
+import axios from 'axios'
 export default {
 	components: {
 		elInput:Input,
@@ -29,7 +30,10 @@ export default {
 	},
 	methods:{
 		login(){
-
+			this.$store.dispatch('login',{
+				userName:this.name,
+				password:this.password
+			})
 		}
 	}
 }

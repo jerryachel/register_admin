@@ -1,13 +1,13 @@
-import Vue from 'Vue'
+import Vue from 'vue'
 import Vuex from 'vuex'
 import Cookies from 'js-cookie'
 // 引入 axios
-import axios from 'axios'
+import axios from '../service/axios.js'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
 	state: {
-
+		user_info:''
 	},
 	mutations:{
 		SAVE_INFO:(state,obj)=> {
@@ -34,6 +34,16 @@ const store = new Vuex.Store({
 		}
 	},
 	actions: {
+		login:({ commit },obj) => {
+			axios.post('account/login.do',{
+				userName:obj.userName,
+				password:obj.password
+			}).then(({data})=>{
+				console.log(data)
+
+			})
+			commit('SAVE_INFO',obj)
+	    },
 		useInfo:({ commit },obj) => {
 			commit('SAVE_INFO',obj)
 	    },
