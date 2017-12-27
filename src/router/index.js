@@ -19,6 +19,7 @@ export default new Router({
       path: '/',
       name: '',
       component: layout,
+      redirect:'/register_info',
       children:[
 		{
 	      path: '/register_info',

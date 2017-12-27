@@ -109,6 +109,15 @@ export default {
 		height: 100%;
 		width: calc(100% - 170px);
 		padding: 20px 20px;
+		overflow-y:auto;
+	}
+	.el-table{
+		.cell{
+			text-align: center;
+		}
+	}
+	.el-table__body-wrapper{
+		overflow-x:hidden;
 	}
 }	
 </style>

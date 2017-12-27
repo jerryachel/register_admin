@@ -35,7 +35,7 @@ export default {
 				password:this.password
 			}).then(({data})=>{
 				this.$store.dispatch('login',{name:'陈医生'})
-				this.$router.push('/register_list')
+				this.$router.push('/register_info')
 			})
 		}
 	}
