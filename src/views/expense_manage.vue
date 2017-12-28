@@ -4,7 +4,7 @@
 		<p class="expense">更改挂号费用为：
 			￥ <el-input v-model="expense" placeholder="请输入挂号费用"></el-input>
 		</p>
-		<el-button type="primary" @click="saveExpense">保存</el-button>
+		<el-button class="save_btn" type="primary" @click="saveExpense">保存</el-button>
 	</div>
 </template>
 <script>
@@ -21,14 +21,13 @@ export default {
 	},
 	methods:{
 		saveExpense(){
-			/**/
-	        
-			if (!isNaN(this.expense) || paserInt(this.expense)>0) {
+			if (!isNaN(this.expense) && parseInt(this.expense)>0) {
 				console.log()
 			}else{
 				this.$message({
 					showClose: true,
-					message: ''
+					message: '请输入正确的金额！',
+					type: 'error'
 				})
 			}
 		}
@@ -45,6 +44,9 @@ export default {
 		display: flex;
 		align-items:center;
 		margin: 40px 0;
+	}
+	.save_btn{
+		margin-left: 130px;
 	}
 }
 </style>

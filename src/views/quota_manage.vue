@@ -15,8 +15,8 @@
 				<li>六</li>
 			</ul>
 			<ul class="calendar_body">
-				<li>
-					<span class="calendar_date">1</span>
+				<li v-for="(item,index) in this.daysArr" :style="index == 0?marginLeft:''">
+					<span class="calendar_date">{{item.date}}</span>
 					<span class="calendar_quota">20/20</span>
 				</li>
 			</ul>
@@ -47,6 +47,8 @@ export default {
 				value: 200,
 				label: '晚班'
 			}],
+			daysArr:[],
+			dayOfWeek:0
 		}
 	},
 	watch:{
@@ -54,10 +56,31 @@ export default {
 			console.log(val)
 		}
 	},
+	computed:{
+		marginLeft:function(){
+			return {
+				marginLeft:(this.dayOfWeek * 85)+'px'
+			} 
+		}
+	},
 	created(){
-		
+		this.renderCalendar()
 	},
 	methods:{
+		renderCalendar(){
+			let firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1)
+      		this.dayOfWeek = firstDay.getDay()
+      		var d = new Date(2017,12,0).getDate()
+			console.log(d)
+			
+			for(let i = 0; i < d; i++){
+				let obj = {
+					date:i+1
+				} 
+				this.daysArr.push(obj)
+
+			}
+		},
 		handleDateChange(val){
 			//let time = this.date.Format("yyyy-MM")+'-01'
 			console.log(val)
@@ -87,15 +110,22 @@ export default {
 		display: flex;
 		justify-content:space-between;
 		li{
-			width: 45px;
+			width: 14.28%;
 			text-align: center;
 		}
 	}
 	.calendar_body{
+		display: flex;
+		flex-wrap:wrap;
+		justify-content:flex-start;
 		li{
-			width: 45px;
+			width: 85px;
+			//height: 85px;
 			text-align: center;
 			margin: 20px 0;
+			display: flex;
+			flex-direction:column;
+			align-items:center;
 		}
 		.calendar_date{
 			font-size: 16px;

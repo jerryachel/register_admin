@@ -56,7 +56,11 @@ service.interceptors.response.use(
   //     }
   error => {
     console.log('err' + error); // for debug
-    MessageBox.alert('获取数据失败，请刷新重试')
+    this.$message({
+      showClose: true,
+      message: '获取数据失败，请刷新重试',
+      type: 'error'
+    })
     return Promise.reject(error);
   }
 )
