@@ -21,6 +21,13 @@ import App from './App'
 import router from './router'
 import store from './store/store'
 import './assets/css/public.css'
+import {Message} from 'element-ui'
+Message.install = function (Vue, options) {
+  Vue.prototype.$message = Message
+}
+Vue.use(Message)
+
+
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
