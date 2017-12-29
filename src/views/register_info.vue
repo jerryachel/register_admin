@@ -40,6 +40,7 @@
 <script>
 import {DatePicker,Select,Option,Input,Button,Table,TableColumn,Pagination} from 'element-ui'
 import navBar from '@/components/nav.vue'
+import axios from '../service/axios.js'
 export default {
 	components: {
 		elDatePicker:DatePicker,
@@ -109,6 +110,9 @@ export default {
 		},
 		handleCurrentChange(val) {
 			console.log(val)
+		},
+		getList(){
+			axios.get('clinicNumberRecord/queryList.do')
 		}
 	}
 }

@@ -25,37 +25,12 @@ const store = new Vuex.Store({
 				}
 			}*/
 		},
-		//保存站点列表信息
-		SAVE_SITES:(state,obj)=>{
-			obj.push({
-				id:'',
-				name:'所有'
-			})
-			state.siteList = obj
-			Cookies.set('siteList',obj)
-		}
+
 	},
 	actions: {
 		login:({ commit },obj) => {
 			commit('SAVE_INFO',obj)
-	    },
-		// useInfo:({ commit },obj) => {
-		// 	commit('SAVE_INFO',obj)
-	 //    },
-	    sites:({ commit },obj)=>{
-	    	commit('SAVE_SITES',obj)
 	    }
-	},
-	getters:{
-		siteList:(state)=>{
-			return state.siteList
-		},
-		session:(state)=>{
-			return state.user_info.session
-		},
-		token:(state)=>{
-			return state.user_info.token
-		}
 	}
 })
 export default store

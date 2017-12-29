@@ -1,5 +1,6 @@
-import axios from 'axios';
-
+import axios from 'axios'
+import Cookies from 'js-cookie'
+import { Loading,Message,MessageBox} from 'element-ui'
 // import router from '../router';
 
 // 创建axios实例
@@ -8,12 +9,14 @@ const service = axios.create({
   timeout: 10000, // 请求超时时间
   //withCredentials:true
 });
-
+let loading 
 // request拦截器
 service.interceptors.request.use(config => {
 
   // Do something before request is sent
-
+  loading = Loading.service({
+    target:document.querySelector('.content')
+  })
   return config;
 }, error => {
   // Do something with request error
@@ -24,7 +27,17 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(
   response => {
-
+    loading.close()
+    if (response.data.errorCode ==  -999) {
+      MessageBox.alert('登录状态已失效，请重新登录', '提示', {
+        confirmButtonText: '确定',
+        callback: action => {
+          Cookies.remove('user_info')
+          window.location.reload()
+        }
+      });
+      //return false
+    }
     return response
   },
   /**
@@ -56,7 +69,7 @@ service.interceptors.response.use(
   //     }
   error => {
     console.log('err' + error); // for debug
-    this.$message({
+    Message({
       showClose: true,
       message: '获取数据失败，请刷新重试',
       type: 'error'

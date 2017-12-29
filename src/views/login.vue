@@ -30,12 +30,28 @@ export default {
 	},
 	methods:{
 		login(){
+			if (this.name == '' || this.password == '') {
+				this.$message({
+					showClose: true,
+					message: '用户名与密码不能为空',
+					type: 'error'
+				})
+				return false
+			}
 			axios.post('account/login.do',{
 				userName:this.name,
 				password:this.password
 			}).then(({data})=>{
-				this.$store.dispatch('login',{name:'陈医生'})
-				this.$router.push('/register_info')
+				if (data.success) {
+					this.$store.dispatch('login',{name:'陈医生'})
+					this.$router.push('/register_info')
+				}else{
+					this.$message({
+						showClose: true,
+						message: data.errorMsg,
+						type: 'error'
+					})
+				}
 			})
 		}
 	}

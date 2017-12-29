@@ -7,8 +7,8 @@
 				<!-- <p>陈景辉诊所后台管理系统</p> -->
 			</div>
 			<div class="user_info">
-				<span>当前账户： XXX </span>
-				<a href="javascript:void(0)">【退出】</a>
+				<span>当前账户： {{username.name}} </span>
+				<a @click="logout" href="javascript:void(0)">【退出】</a>
 			</div>
 		</header>
 		<div class="container">
@@ -32,14 +32,21 @@
 	</div>
 </template>
 <script>
-import {Menu,Submenu,MenuItem} from 'element-ui'
+import {Menu,Submenu,MenuItem,MessageBox} from 'element-ui'
 import navBar from '@/components/nav.vue'
+import Cookies from 'js-cookie'
+import axios from '../service/axios.js'
 export default {
 	components: {
 		elMenu:Menu,
 		elSubmenu:Submenu,
 		elMenuItem:MenuItem,
 		navBar:navBar
+	},
+	computed:{
+		username:function(){
+			return this.$store.state.user_info
+		}	
 	},
 	methods:{
 		handleSelect(index, indexPath) {
@@ -50,6 +57,23 @@ export default {
 		},
 		handleClose(key, keyPath) {
 		  console.log(key, keyPath)
+		},
+		logout(){
+	        MessageBox.confirm('确定要退出登录吗？', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+	        }).then(() => {
+		        axios.get('account/logout.do').then(({data})=>{
+		        	if (data.success) {
+		        		Cookies.remove('user_info')
+		        		window.location.reload()
+		        	}
+				})
+	        }).catch(() => {
+	                   
+	        })
+			
 		}
 	}
 }
