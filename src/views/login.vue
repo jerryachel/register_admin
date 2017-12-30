@@ -8,9 +8,9 @@
 			</div>
 			<div class="login_input">
 				密码
-				<el-input type="password" v-model="password" placeholder="请输入密码"></el-input>
+				<el-input @keyup.native.enter="login" type="password" v-model="password" placeholder="请输入密码"></el-input>
 			</div>
-			<el-button @click.native="login" class="login_btn" type="primary">登录</el-button>
+			<el-button  @click.native="login" class="login_btn" type="primary">登录</el-button>
 		</div>
 	</div>
 </template>
@@ -30,14 +30,14 @@ export default {
 	},
 	methods:{
 		login(){
-			/*if (this.name == '' || this.password == '') {
+			if (this.name == '' || this.password == '') {
 				this.$message({
 					showClose: true,
 					message: '用户名与密码不能为空',
 					type: 'error'
 				})
 				return false
-			}*/
+			}
 			axios.get('account/login.do',{
 				params:{
 					userName:this.name,
@@ -45,7 +45,7 @@ export default {
 				}
 			}).then(({data})=>{
 				if (data.success) {
-					this.$store.dispatch('login',{name:'陈医生'})
+					this.$store.dispatch('login',{name:data.model})
 					this.$router.push('/register_info')
 				}else{
 					this.$message({

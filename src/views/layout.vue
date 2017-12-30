@@ -3,7 +3,7 @@
 		<header class="header">
 			<div class="title">
 				<img src="../assets/images/doctor.png" alt="">
-				<p>XXXXXXXXXXXXXXXXXX</p>
+				<p>陈景辉诊所后台管理系统</p>
 				<!-- <p>陈景辉诊所后台管理系统</p> -->
 			</div>
 			<div class="user_info">
@@ -14,13 +14,13 @@
 		<div class="container">
 			<div class="sidebar">
 	            <el-menu :default-active="$route.path" :router=true class="el-menu-vertical-demo" @select="handleSelect" @open="handleOpen" @close="handleClose">
-	            	<el-menu-item index="/register_info"><i class="el-icon-menu"></i>挂号信息</el-menu-item>
+	            	<el-menu-item index="/register_info"><i class="el-icon-document"></i>挂号信息</el-menu-item>
 	                <el-submenu index="/">
-	                    <template slot="title"><i class="el-icon-search"></i>配置信息</template>
+	                    <template slot="title"><i class="el-icon-menu"></i>配置信息</template>
 	                    <el-menu-item index="/quota_manage">挂号名额管理</el-menu-item>
 	                    <el-menu-item index="/expense_manage">挂号费用配置</el-menu-item>
 	                </el-submenu>
-	                <el-menu-item index="/password"><i class="el-icon-menu"></i>修改密码</el-menu-item>
+	                <el-menu-item index="/password"><i class="el-icon-edit"></i>修改密码</el-menu-item>
 	            </el-menu>
 	        </div>
 	        <div class="content">
