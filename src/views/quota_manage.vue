@@ -16,9 +16,9 @@
 			</ul>
 			<ul class="calendar_body">
 				<li v-for="(item,index) in daysArr" :style="index == 0?marginLeft:''">
-					<div @click="getDayQuota(index,date)" :class="['calendar_day',index+1 == currentDay && date.Format('yyyy-MM') === new Date().Format('yyyy-MM')?'calendar_current':'']">
-						<span class="calendar_date">{{item.date}}</span>
-						<span class="calendar_quota">20/20</span>
+					<div @click="getDayQuota(index,item)" :class="['calendar_day',index+1 == currentDay && date.Format('yyyy-MM') === new Date().Format('yyyy-MM')?'calendar_current':'']">
+						<span class="calendar_date">{{index+1}}</span>
+						<span class="calendar_quota">{{item.registeredNum}}/{{item.totalNum}}</span>
 					</div>
 				</li>
 			</ul>
@@ -27,29 +27,30 @@
 			<el-form :model="form">
 				<div class="dialog_input">
 					<span>早班</span>
-					<span>已预约：{{form.morningUsedNum}}</span>
+					<span>已预约：{{form.detail[0].registeredNum}}</span>
 					<el-form-item label="总号数" label-width="80px">
-						<el-input v-model="form.morningTotalNum" auto-complete="off"></el-input>
+						<el-input type="number" v-model="form.detail[0].totalNum" auto-complete="off"></el-input>
 					</el-form-item>
 				</div>
 				<div class="dialog_input">
 					<span>晚班</span>
-					<span>已预约：{{form.aternoonTotalNum}}</span>
+					<span>已预约：{{form.detail[1].registeredNum}}</span>
 					<el-form-item label="总号数" label-width="80px">
-						<el-input v-model="form.aternoonUsedNum" auto-complete="off"></el-input>
+						<el-input type="number" v-model="form.detail[1].totalNum" auto-complete="off"></el-input>
 					</el-form-item>
 				</div>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click="dialogFormVisible = false">取 消</el-button>
-				<el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+				<el-button type="primary" @click="comfirm()">确 定</el-button>
 			</div>
 		</el-dialog>
 	</div>
 </template>
 <script>
-import {DatePicker,Input,Button,Dialog,Form,FormItem} from 'element-ui'
+import {DatePicker,Input,Button,Dialog,Form,FormItem,MessageBox} from 'element-ui'
 import navBar from '@/components/nav.vue'
+import axios from '../service/axios.js'
 export default {
 	components: {
 		elDatePicker:DatePicker,
@@ -77,12 +78,18 @@ export default {
 			//上午总号数
 			morningTotal:5,
 			form:{
-				title:'2017-12-29',
-				morningUsedNum:5,
-				aternoonUsedNum:11,
-				morningTotalNum:20,
-				aternoonTotalNum:30,
-
+				dateTime:'2017-12-29',
+				detail:[{
+					configId:'',
+					configClass:100,
+					registeredNum:0,
+					totalNum:0
+				},{
+					configId:'',
+					configClass:200,
+					registeredNum:0,
+					totalNum:0
+				}],
 			},
 			dialogFormVisible: false,
 		}
@@ -99,34 +106,98 @@ export default {
 		this.renderCalendar()
 	},
 	methods:{
-		getDayQuota(i,date){
+		comfirm(){
+			let totalNum1 = parseInt(this.form.detail[0].totalNum)
+			let totalNum2 = parseInt(this.form.detail[1].totalNum)
+
+			if (parseInt(this.form.detail[0].registeredNum) > parseInt(totalNum1) || parseInt(this.form.detail[1].registeredNum) > parseInt(totalNum2)) {
+				MessageBox.alert('总号数不得少于已预约号数','提示',{
+					type:'warning'
+				})
+				return false
+			}
+			let params = this.form.detail
+			params[0].dateTime = this.form.dateTime
+			params[1].dateTime = this.form.dateTime
+			axios.post('numberConfig/updateTotalNumber.do',{
+				updateDTOs:params
+			}).then(({data})=>{
+				if (data.success) {
+					this.renderCalendar()
+					this.dialogFormVisible = false
+				}
+				else{
+					this.$message({
+						showClose: true,
+						message: data.errorMsg,
+						type: 'error'
+					})
+				}
+			})
+		},
+		//显示详细挂号信息弹窗
+		getDayQuota(i,obj){
 			this.dialogFormVisible = true
-
-
+			this.form = JSON.parse(JSON.stringify(obj))
 		},
 		//获取月日历
 		renderCalendar(){
+
+			//获取改月的第一天为星期几
 			let firstDay = new Date(this.date.getFullYear(), this.date.getMonth(), 1)
       		this.dayOfWeek = firstDay.getDay()
-
-
+      		//获取该月的天数
 			var d = new Date(this.date.getFullYear(),this.date.getMonth()+1,0).getDate()
-			console.log(d)		
+			//清空上一次的面板
+			this.daysArr = []	
+			//生成月历面板	
 			for(let i = 0; i < d; i++){
+				//生成每天的空挂号信息
 				let obj = {
-					date:i+1
+					dateTime:new Date(this.date.getFullYear(), this.date.getMonth(), 1+i).Format('yyyy-MM-dd'),
+					detail:[{
+						configId:'',
+						configClass:100,
+						registeredNum:0,
+						totalNum:0
+					},{
+						configId:'',
+						configClass:200,
+						registeredNum:0,
+						totalNum:0
+					}],
+					registeredNum:0,
+					totalNum:0
 				} 
 				this.daysArr.push(obj)
-
 			}
+
+      		axios.post('numberConfig/queryNumberConfig.do',{
+      			queryDate:this.date.Format('yyyy-MM-dd'),
+      			queryAllMonth:1
+      		}).then(({data})=>{
+      			let res = data.model
+      			if (res) {	
+	      			let len = res.length
+	      			for(let i = 0; i < len; i++){
+		      			this.daysArr.map((item,j,arr)=>{
+		  					if (res[i].dateTime === item.dateTime) {
+		  						//this.daysArr[j] = res[i]
+		  						this.$set(this.daysArr,j,res[i])
+		  					}
+		  				})
+	      			}
+      			}
+      			console.log(this.daysArr)
+      		})
       		
 		},
 		//改变选择的月份
 		handleDateChange(val){
-			this.daysArr = []
-			this.renderCalendar()
-			//let time = this.date.Format("yyyy-MM")+'-01'
-			//console.log(val)
+			if (val) {
+				
+				this.renderCalendar()
+			}
 		}
 	}
 }
@@ -203,6 +274,9 @@ export default {
 		.el-form-item{
 			margin-bottom: 0;
 		}
+	}
+	.el-dialog{
+		width: 500px;
 	}
 	.el-dialog__header{
 		padding: 15px 30px 15px;

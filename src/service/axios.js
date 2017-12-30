@@ -5,9 +5,9 @@ import { Loading,Message,MessageBox} from 'element-ui'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: ' https://www.easy-mock.com/mock/5a41071984b00d4350367a43/register_admin/', // api的base_url
+  baseURL: 'http://gzbige.free.ngrok.cc/', // api的base_url
   timeout: 10000, // 请求超时时间
-  //withCredentials:true
+  withCredentials:true
 });
 let loading 
 // request拦截器
@@ -69,6 +69,7 @@ service.interceptors.response.use(
   //     }
   error => {
     console.log('err' + error); // for debug
+    loading.close()
     Message({
       showClose: true,
       message: '获取数据失败，请刷新重试',

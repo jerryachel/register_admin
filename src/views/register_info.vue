@@ -13,7 +13,7 @@
 				<span>预约电话：</span>
 				<el-input v-model="phone" placeholder="请输入预约电话"></el-input>
 			</div>
-			<el-button class="search_btn" type="primary">搜索</el-button>
+			<el-button @click="getList" class="search_btn" type="primary">搜索</el-button>
 		</div>
 		<div class="table_container">	
 			<el-table stripe :data="tableData" border style="width: 100%">
@@ -27,9 +27,12 @@
 			    </el-table-column>
 			    <el-table-column prop="contactAddress" label="地址" min-width="180">
 			    </el-table-column>
-			    <el-table-column prop="registrationFee" label="挂号费">
+			    <el-table-column prop="registrationFee" label="挂号费" width="100">
 			    </el-table-column>
-			    <el-table-column prop="contactMobile" label="电话">
+			    <el-table-column label="操作" width="80">
+			    	<template slot-scope="scope">
+			    		<el-button  @click="handleEdit(scope.$index, scope.row)" size="mini" plain type="primary">就诊</el-button>
+			    	</template>
 			    </el-table-column>
 		  	</el-table>
 		  	<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 30]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
@@ -54,7 +57,7 @@ export default {
 	},
 	data(){
 		return {
-			date:'',
+			date:new Date(),
 			recordClassOptions: [{
 				value: 100,
 				label: '早班'
@@ -65,44 +68,15 @@ export default {
 			recordClass:100,
 			phone:'',
 			//表格数据
-	        tableData: [{
-	          recordId:2,
-	          sex:0,
-	          contactMobile:'13544500999',
-	          contactName: '王小虎',
-	          contactAddress: '上海市普陀区金沙江路 1518 弄',
-	          registerNumber:5,
-	          registrationFee:99
-	        },{
-	          recordId:2,
-	          sex:0,
-	          contactMobile:'13544500999',
-	          contactName: '王小虎',
-	          contactAddress: '上海市普陀区金沙江路 1518 弄',
-	          registerNumber:5,
-	          registrationFee:99
-	        },{
-	          recordId:2,
-	          sex:0,
-	          contactMobile:'13544500999',
-	          contactName: '王小虎',
-	          contactAddress: '上海市普陀区金沙江路 1518 弄',
-	          registerNumber:5,
-	          registrationFee:99
-	        },{
-	          recordId:2,
-	          sex:0,
-	          contactMobile:'13544500999',
-	          contactName: '王小虎',
-	          contactAddress: '上海市普陀区金沙江路 1518 弄',
-	          registerNumber:5,
-	          registrationFee:99
-	        }],
+	        tableData: [],
 	        //分页数据
 	        pageSize:10,
 	        currentPage:1,
-	        totalCount:200
+	        totalCount:0
 		}
+	},
+	created(){
+		this.getList()
 	},
 	methods:{
 		handleSizeChange(val) {
@@ -111,8 +85,25 @@ export default {
 		handleCurrentChange(val) {
 			console.log(val)
 		},
+		handleEdit(index, row) {
+	        console.log(index, row);
+	    },
 		getList(){
-			axios.get('clinicNumberRecord/queryList.do')
+			axios.get('clinicNumberRecord/queryList.do',{
+				params:{
+					recordTime:this.date.Format('yyyy-MM-dd'),
+					recordClass:this.recordClass,
+					contactMobile:this.phone,
+					pageIndex:this.currentPage,
+					pageSize:this.pageSize
+				}
+			}).then(({data})=>{
+				if (data.success) {
+					let res = data.model
+					this.tableData = res.recordDTOS
+					this.totalCount = res.totalRecord
+				}
+			})
 		}
 	}
 }

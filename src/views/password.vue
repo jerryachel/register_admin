@@ -16,6 +16,7 @@
 </template>
 <script>
 import {Input,Button,Form,FormItem} from 'element-ui'
+import axios from '../service/axios.js'
   export default {
   	components: {
   		elForm:Form,
@@ -62,7 +63,25 @@ import {Input,Button,Form,FormItem} from 'element-ui'
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            axios.get('account/updatePassword.do',{
+              params:{
+                password:this.ruleForm.pass
+              }
+            }).then(({data})=>{
+              if (data.success) {
+                this.$message({
+                  showClose: true,
+                  message: '更新成功',
+                  type: 'success'
+                })
+              }else{
+                this.$message({
+                  showClose: true,
+                  message: data.errorMsg,
+                  type: 'error'
+                })
+              }
+            })
           } else {
             console.log('error submit!!');
             return false;
