@@ -69,7 +69,7 @@ export default {
 				value: 200,
 				label: '晚班'
 			}],
-			recordClass:100,
+			recordClass:new Date().getHours() <  14 ? 100 : 200,
 			phone:'',
 			//表格数据
 	        tableData: [],

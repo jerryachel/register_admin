@@ -5,7 +5,7 @@ import { Loading,Message,MessageBox} from 'element-ui'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: 'http://gzbige.free.ngrok.cc/', // api的base_url
+  baseURL: 'http://register-back.gzbige.com/', // api的base_url
   timeout: 10000, // 请求超时时间
   withCredentials:true
 });
