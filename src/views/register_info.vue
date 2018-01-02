@@ -139,6 +139,8 @@ export default {
 					let res = data.model
 					this.tableData = res.recordDTOS
 					this.totalCount = res.totalRecord
+				}else{
+					this.tableData = []
 				}
 			})
 		}
