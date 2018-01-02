@@ -25,7 +25,9 @@
 	        </div>
 	        <div class="content">
 	        	<nav-bar></nav-bar>
-	        	<router-view></router-view>
+	        	<transition name="layout">
+	        		<router-view></router-view>
+	        	</transition>
 	        </div>
 		</div>
 		
@@ -142,6 +144,9 @@ export default {
 	}
 	.el-table__body-wrapper{
 		overflow-x:hidden;
+	}
+	.layout-enter-active{
+		animation: fadeIn .8s  both 1;
 	}
 }	
 </style>
