@@ -24,6 +24,8 @@ import './assets/css/public.css'
 import {Message} from 'element-ui'
 Vue.prototype.$message = Message
 
+import Es6Promise from 'es6-promise'
+Es6Promise.polyfill()
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 router.beforeEach((to, from, next) => {
