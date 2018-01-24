@@ -68,6 +68,9 @@ export default {
 			}, {
 				value: 200,
 				label: '晚班'
+			},  {
+				value: null,
+				label: '全部'
 			}],
 			recordClass:new Date().getHours() <  14 ? 100 : 200,
 			phone:'',

@@ -23,7 +23,7 @@
 				</li>
 			</ul>
 		</div>
-		<el-dialog :title="form.title" :visible.sync="dialogFormVisible">
+		<el-dialog :title="form.dateTime" :visible.sync="dialogFormVisible">
 			<el-form :model="form">
 				<div class="dialog_input">
 					<span>早班</span>
@@ -139,6 +139,7 @@ export default {
 		getDayQuota(i,obj){
 			this.dialogFormVisible = true
 			this.form = JSON.parse(JSON.stringify(obj))
+			console.log(this.form)
 		},
 		//获取月日历
 		renderCalendar(){
