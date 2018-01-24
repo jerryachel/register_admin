@@ -13,7 +13,10 @@
 				<span>预约电话：</span>
 				<el-input type="number" v-model="phone" placeholder="请输入预约电话"></el-input>
 			</div>
-			<el-button @click="getList" class="search_btn" type="primary">搜索</el-button>
+			<div>
+				<a :href="exportHref "class="search_btn export_btn" download="123" >导出</a>
+				<el-button @click="getList" class="search_btn" type="primary">搜索</el-button>
+			</div>
 		</div>
 		<div class="table_container">	
 			<el-table stripe :data="tableData" border style="width: 100%">
@@ -69,7 +72,7 @@ export default {
 				value: 200,
 				label: '晚班'
 			},  {
-				value: null,
+				value: '',
 				label: '全部'
 			}],
 			recordClass:new Date().getHours() <  14 ? 100 : 200,
@@ -79,7 +82,12 @@ export default {
 	        //分页数据
 	        pageSize:10,
 	        currentPage:1,
-	        totalCount:0
+	        totalCount:0,
+		}
+	},
+	computed:{
+		exportHref:function(){
+			return `http://register-back.gzbige.com/clinicNumberRecord/export.do?recordTime=${this.date.Format('yyyy-MM-dd')}&recordClass=${this.recordClass}&contactMobile=${this.phone}&pageIndex=${this.currentPage-1}&pageSize=${this.pageSize}`
 		}
 	},
 	created(){
@@ -146,6 +154,17 @@ export default {
 					this.tableData = []
 				}
 			})
+		},
+		exportExcel(){
+			axios.get('clinicNumberRecord/export.do',{
+				params:{
+					recordTime:this.date.Format('yyyy-MM-dd'),
+					recordClass:this.recordClass,
+					contactMobile:this.phone,
+					pageIndex:this.currentPage-1,
+					pageSize:this.pageSize
+				}
+			})
 		}
 	}
 }
@@ -167,6 +186,34 @@ export default {
 	}
 	.el-pagination{
 		margin-top: 40px;
+	}
+	.export_btn{
+		display: inline-block;
+	    line-height: 1;
+	    white-space: nowrap;
+	    cursor: pointer;
+	    border: 1px solid #dcdfe6;
+	    text-align: center;
+	    -webkit-box-sizing: border-box;
+	    box-sizing: border-box;
+	    margin: 0;
+	    -webkit-transition: .1s;
+	    transition: .1s;
+	    font-weight: 500;
+	    -moz-user-select: none;
+	    -webkit-user-select: none;
+	    -ms-user-select: none;
+	    padding: 12px 20px;
+	    font-size: 14px;
+	    border-radius: 4px;
+	    color: #fff;
+		background-color: #67c23a;
+		border-color: #67c23a;
+		&:hover,&:focus{
+			background: #85ce61;
+		    border-color: #85ce61;
+		    color: #fff;
+		}
 	}
 }	
 
